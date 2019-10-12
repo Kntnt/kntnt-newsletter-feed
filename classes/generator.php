@@ -49,8 +49,7 @@ class Generator {
 	}
 
 	private function variables() {
-
-		$variables = [
+		return [
 			'charset' => $this->charset,
 			'feed_title' => Plugin::option( 'feed_title' ),
 			'feed_description' => Plugin::option( 'feed_description' ),
@@ -67,11 +66,6 @@ class Generator {
 			'feed_image_height' => 32,
 			'posts' => $this->posts(),
 		];
-
-		Plugin::log( "Variables = %s", $variables );
-
-		return $variables;
-
 	}
 
 	private function self_link() {
@@ -108,36 +102,7 @@ class Generator {
 		$posts = [];
 
 		foreach ( $this->posts as $item ) {
-
-			$post = new \stdClass;
-
-			$post->title = apply_filters( 'the_title_rss', get_the_title( $item ) );
-
-			$post->link = esc_url( apply_filters( 'the_permalink_rss', get_permalink( $item ) ) );
-
-			$post->date = mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true, $item ), false );
-
-			$post->author = apply_filters( 'the_author', get_the_author_meta( 'display_name', $item->author ) );
-
-			$post->categories = $this->categories( $item );
-
-			$post->guid = get_the_guid( $item );
-
-			$post->description = $this->description( $item );
-
-			if ( $image = Plugin::option( 'image' ) ) {
-
-				$thumbnail_id = get_post_thumbnail_id( $item );
-				$thumbnail = image_get_intermediate_size( $thumbnail_id, $image );
-
-				$post->image_url = $thumbnail['url'];
-				$post->image_size = filesize( Plugin::str_join( wp_upload_dir()['basedir'], $thumbnail['path'] ) );
-				$post->image_type = get_post_mime_type( $thumbnail_id );
-
-			}
-
-			$posts[] = $post;
-
+			$posts[] = new Post( $item, $this->charset );
 		}
 
 		if ( 'ASC' == Plugin::option( 'order' ) ) {
@@ -146,24 +111,6 @@ class Generator {
 
 		return $posts;
 
-	}
-
-	private function categories( $post ) {
-		$names = [];
-		$categories = get_the_category( $post->ID );
-		foreach ( $categories as $category ) {
-			$name = sanitize_term_field( 'name', $category->name, $category->term_id, 'category', 'rss' );
-			$names[] = @html_entity_decode( $name, ENT_COMPAT, $this->charset );
-		}
-		return array_unique( $names );
-	}
-
-	private function description( $post ) {
-		$description = $post->post_excerpt;
-		if ( ! Plugin::option( 'raw_content' ) ) {
-			$description = apply_filters( 'the_excerpt_rss', $description, $post );
-		}
-		return $description;
 	}
 
 }

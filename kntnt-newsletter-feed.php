@@ -20,7 +20,7 @@ namespace Kntnt\Newsletter_Feed;
 defined( 'WPINC' ) || die;
 
 // Define WP_DEBUG as TRUE and uncomment next line to debug this plugin.
-define( 'KNTNT_NEWSLETTER_FEED', true );
+// define( 'KNTNT_NEWSLETTER_FEED', true );
 
 spl_autoload_register( function ( $class ) {
 	$ns_len = strlen( __NAMESPACE__ );
