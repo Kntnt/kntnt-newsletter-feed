@@ -173,8 +173,8 @@ abstract class Abstract_Settings {
 		return true;
 	}
 
-	protected function actions_after_saving( $opt ) {
-		do_action( "$this->ns/settings/saved", $opt );
+	protected function actions_after_saving( $opt, $fields ) {
+		do_action( "$this->ns/settings/saved", $opt, $fields );
 	}
 
 	/**
@@ -321,7 +321,7 @@ abstract class Abstract_Settings {
 			$this->notify_success();
 
 			// Do actions after saving.
-			$this->actions_after_saving( $opt );
+			$this->actions_after_saving( $opt, $fields );
 
 		}
 

@@ -24,65 +24,39 @@ class Post {
 	}
 
 	public function title() {
-		$original = get_the_title( $this->post );
-		$filtered = apply_filters( 'the_title_rss', $original );
-		Plugin::log( 'Original: %s', $original );
-		Plugin::log( 'Filtered: %s', $filtered );
-		return $filtered;
+		return apply_filters( 'the_title_rss', get_the_title( $this->post ) );
 	}
 
 	public function link() {
-		$original = get_permalink( $this->post );
-		$filtered = esc_url( apply_filters( 'the_permalink_rss', $original ) );
-		Plugin::log( 'Original: %s', $original );
-		Plugin::log( 'Filtered: %s', $filtered );
-		return $filtered;
+		return esc_url( apply_filters( 'the_permalink_rss', get_permalink( $this->post ) ) );
 	}
 
 	public function date() {
-		$original = get_post_time( 'Y-m-d H:i:s', true, $this->post );
-		$filtered = mysql2date( 'D, d M Y H:i:s +0000', $original, false );
-		Plugin::log( 'Original: %s', $original );
-		Plugin::log( 'Filtered: %s', $filtered );
-		return $filtered;
+		return mysql2date( 'D, d M Y H:i:s +0000', get_post_time( 'Y-m-d H:i:s', true, $this->post ), false );
 	}
 
 	public function author() {
-		$original = get_the_author_meta( 'display_name', $this->post->author );
-		$filtered = apply_filters( 'the_author', $original );
-		Plugin::log( 'Original: %s', $original );
-		Plugin::log( 'Filtered: %s', $filtered );
-		return $filtered;
+		return apply_filters( 'the_author', get_the_author_meta( 'display_name', $this->post->author ) );
 	}
 
 	public function categories() {
 		$names = [];
-		$categories = get_the_category( $this->post->ID );
-		foreach ( $categories as $category ) {
-			$original = $category->name;
-			$filtered = @html_entity_decode( sanitize_term_field( 'name', $original, $category->term_id, 'category', 'rss' ), ENT_COMPAT, $this->charset );;
-			Plugin::log( 'Original: %s', $original );
-			Plugin::log( 'Filtered: %s', $filtered );
-			$names[] = $filtered;
+		foreach ( get_the_category( $this->post->ID ) as $category ) {
+			$names[] = @html_entity_decode( sanitize_term_field( 'name', $category->name, $category->term_id, 'category', 'rss' ), ENT_COMPAT, $this->charset );
 		}
 		return array_unique( $names );
 	}
 
 	public function guid() {
-		$original = get_the_guid( $this->post );
-		Plugin::log( 'Original: %s', $original );
-		return $original;
+		return get_the_guid( $this->post );
 	}
 
 	public function description() {
-		$original = $this->post->post_excerpt;
-		Plugin::log( 'Original: %s', $original );
-		$filtered = $original;
+		$description = $this->post->post_excerpt;
 		if ( ! Plugin::option( 'raw_content' ) ) {
-			$filtered = apply_filters( 'the_excerpt_rss', $original, $this->post );
-			Plugin::log( 'Filtered: %s', $filtered );
+			$description = apply_filters( 'the_excerpt_rss', $description, $this->post );
 		}
-		return $filtered;
+		return $description;
 	}
 
 	public function has_image() {
@@ -90,21 +64,15 @@ class Post {
 	}
 
 	public function image_url() {
-		$original = $this->image['url'];
-		Plugin::log( 'Original: %s', $original );
-		return $original;
+		return $this->image['url'];
 	}
 
 	public function image_size() {
-		$original = filesize( Plugin::str_join( wp_upload_dir()['basedir'], $this->image['path'] ) );
-		Plugin::log( 'Original: %s', $original );
-		return $original;
+		return filesize( Plugin::str_join( wp_upload_dir()['basedir'], $this->image['path'] ) );
 	}
 
 	public function image_type() {
-		$original = get_post_mime_type( $this->image['id'] );
-		Plugin::log( 'Original: %s', $original );
-		return $original;
+		return get_post_mime_type( $this->image['id'] );
 	}
 
 }

@@ -32,6 +32,7 @@ class Settings extends Abstract_Settings {
 			'description' => __( 'The slug of the feed.', 'kntnt-newsletter-feed' ),
 			'default' => 'newsletter',
 			'required' => true,
+			'wpml' => true,
 		];
 
 		$fields['feed_title'] = [
@@ -110,7 +111,7 @@ class Settings extends Abstract_Settings {
 
 	}
 
-	protected function actions_after_saving( $opt ) {
+	protected function actions_after_saving( $opt, $fields ) {
 
 		global $wp_rewrite;
 		if ( ! in_array( $opt['name'], $wp_rewrite->feeds ) ) {
@@ -118,7 +119,7 @@ class Settings extends Abstract_Settings {
 			$wp_rewrite->flush_rules();
 		}
 
-		parent::actions_after_saving( $opt );
+		parent::actions_after_saving( $opt, $fields );
 
 	}
 
@@ -169,7 +170,7 @@ class Settings extends Abstract_Settings {
 		foreach ( Plugin::image_sizes() as $name => $size ) {
 			$image_sizes[ $name ] = "$name (${size['width']}x${size['height']})";
 		}
-		return ['' => ''] + $image_sizes;
+		return [ '' => '' ] + $image_sizes;
 	}
 
 }
