@@ -25,21 +25,22 @@ class Settings extends Abstract_Settings {
 	 */
 	protected function fields() {
 
+        $translatable_msg = function_exists('icl_object_id') ? ' This field should be <a href="/wp-admin/admin.php?page=wpml-string-translation%2Fmenu%2Fstring-translation.php&context=admin_texts_kntnt-newsletter-feed">translated</a>.' : '';
+
 		$fields['name'] = [
 			'type' => 'text',
 			'label' => __( "Slug", 'kntnt-newsletter-feed' ),
 			'size' => 80,
-			'description' => __( 'The slug of the feed.', 'kntnt-newsletter-feed' ),
+			'description' => __( 'The <a href="https://wordpress.org/support/article/wordpress-feeds/#finding-your-feed-url">name used in the URL</a> to access this type of feed.', 'kntnt-newsletter-feed' ),
 			'default' => 'newsletter',
 			'required' => true,
-			'wpml' => true,
 		];
 
 		$fields['feed_title'] = [
 			'type' => 'text',
 			'label' => __( "Title", 'kntnt-newsletter-feed' ),
 			'size' => 80,
-			'description' => __( 'The feed title.', 'kntnt-newsletter-feed' ),
+            'description' => sprintf('%s%s', __( 'Title used in the feed.', 'kntnt-newsletter-feed' ), $translatable_msg),
 			'default' => get_bloginfo( 'name' ),
 			'required' => true,
 		];
@@ -49,7 +50,7 @@ class Settings extends Abstract_Settings {
 			'label' => __( "Description", 'kntnt-newsletter-feed' ),
 			'cols' => 80,
 			'rows' => 5,
-			'description' => __( 'Short description of the feed.', 'kntnt-newsletter-feed' ),
+            'description' => sprintf('%s%s', __( 'Description used in the feed.', 'kntnt-newsletter-feed' ), $translatable_msg),
 			'default' => get_bloginfo( 'description' ),
 			'required' => true,
 			'filter-after' => 'stripslashes',
@@ -59,7 +60,7 @@ class Settings extends Abstract_Settings {
 			'type' => 'text',
 			'label' => __( "Link", 'kntnt-newsletter-feed' ),
 			'size' => 80,
-			'description' => __( 'Url for the feed\'s source.', 'kntnt-newsletter-feed' ),
+            'description' => sprintf('%s%s', __( 'Url for the feed\'s source.', 'kntnt-newsletter-feed' ), $translatable_msg),
 			'default' => get_bloginfo( 'wpurl' ),
 			'required' => true,
 		];
