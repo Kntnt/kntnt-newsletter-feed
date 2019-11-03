@@ -98,12 +98,6 @@ class Settings extends Abstract_Settings {
 			'options' => $this->image_sizes(),
 		];
 
-		$fields['raw_content'] = [
-			'type' => 'checkbox',
-			'label' => __( "Raw content", 'kntnt-newsletter-feed' ),
-			'description' => __( 'Bypass the filter <code>get_the_excerpt</code>.', 'kntnt-newsletter-feed' ),
-		];
-
 		$fields['submit'] = [
 			'type' => 'submit',
 		];

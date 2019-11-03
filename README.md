@@ -44,6 +44,10 @@ If you are familiar with Git, please do a pull request.
 
 ## Changelog
 
+### 1.0.2
+
+Changed to standard solution for fetching excerpts to be used as descriptions.
+
 ### 1.0.1
 
 Improved information on settings page.
