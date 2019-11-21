@@ -4,7 +4,7 @@ WordPress plugin that provide a RSS feed for automatic newsletter generation.
 
 ## Description
 
-TODO  
+TODO
 
 ## Installation
 
@@ -43,6 +43,10 @@ If you are unfamiliar with Git, please date it as a new issue on the plugin's [i
 If you are familiar with Git, please do a pull request.
 
 ## Changelog
+
+### 1.1.0
+
+Changed how the feed is generated.
 
 ### 1.0.2
 

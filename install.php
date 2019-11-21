@@ -4,9 +4,8 @@ defined( 'WPINC' ) || die;
 
 add_option( 'kntnt-newsletter-feed', [
 	'name' => 'newsletter',
-	'categories' => [],
+    'include_children' => true,
 	'order' => 'DESC',
-	'max_length' => 10,
+    'max_length' => 10,
 	'image' => false,
-	'raw_content' => false,
 ] );

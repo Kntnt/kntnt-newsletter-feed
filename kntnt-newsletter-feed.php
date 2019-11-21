@@ -6,7 +6,7 @@
  * Plugin URI:        https://github.com/kntnt/kntnt-newsletter-feed
  * GitHub Plugin URI: https://github.com/kntnt/kntnt-newsletter-feed
  * Description:       Provides a RSS feed for automatic newsletter generation.
- * Version:           1.0.2
+ * Version:           1.1.0
  * Author:            Thomas Barregren
  * Author URI:        https://www.kntnt.com/
  * License:           GPL-3.0+
