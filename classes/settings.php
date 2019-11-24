@@ -2,8 +2,6 @@
 
 namespace Kntnt\Newsletter_Feed;
 
-require_once Plugin::plugin_dir( 'classes/abstract-settings.php' );
-
 class Settings extends Abstract_Settings {
 
     /**

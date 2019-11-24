@@ -44,6 +44,10 @@ If you are familiar with Git, please do a pull request.
 
 ## Changelog
 
+### 1.1.1
+
+Removed unnecessary import directive.
+
 ### 1.1.0
 
 Changed how the feed is generated.
