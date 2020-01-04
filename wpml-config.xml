@@ -1,8 +1,0 @@
-<wpml-config>
-    <admin-texts>
-        <key name="kntnt-newsletter-feed">
-            <key name="feed_title"/>
-            <key name="feed_description"/>
-        </key>
-    </admin-texts>
-</wpml-config>

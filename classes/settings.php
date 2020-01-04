@@ -23,7 +23,7 @@ class Settings extends Abstract_Settings {
      */
     protected function fields() {
 
-        $translatable_msg = function_exists( 'icl_object_id' ) ? ' This field should be <a href="/wp-admin/admin.php?page=wpml-string-translation%2Fmenu%2Fstring-translation.php&context=admin_texts_kntnt-newsletter-feed">translated</a>.' : '';
+        $lang = Plugin::current_language();
 
         $fields['name'] = [
             'type' => 'text',
@@ -34,31 +34,31 @@ class Settings extends Abstract_Settings {
             'required' => true,
         ];
 
-        $fields['feed_title'] = [
+        $fields[ Plugin::slug_with_lang( 'feed_title' ) ] = [
             'type' => 'text',
             'label' => __( "Title", 'kntnt-newsletter-feed' ),
             'size' => 80,
-            'description' => sprintf( '%s%s', __( 'Title used in the feed.', 'kntnt-newsletter-feed' ), $translatable_msg ),
+            'description' => __( 'Title used in the feed.', 'kntnt-newsletter-feed' ),
             'default' => get_bloginfo( 'name' ),
             'required' => true,
         ];
 
-        $fields['feed_description'] = [
+        $fields[ Plugin::slug_with_lang( 'feed_description' ) ] = [
             'type' => 'text area',
             'label' => __( "Description", 'kntnt-newsletter-feed' ),
             'cols' => 80,
             'rows' => 5,
-            'description' => sprintf( '%s%s', __( 'Description used in the feed.', 'kntnt-newsletter-feed' ), $translatable_msg ),
+            'description' => __( 'Description used in the feed.', 'kntnt-newsletter-feed' ),
             'default' => get_bloginfo( 'description' ),
             'required' => true,
             'filter-after' => 'stripslashes',
         ];
 
-        $fields['feed_site'] = [
+        $fields[ Plugin::slug_with_lang( 'feed_site' ) ] = [
             'type' => 'text',
             'label' => __( "Link", 'kntnt-newsletter-feed' ),
             'size' => 80,
-            'description' => sprintf( '%s%s', __( 'Url for the feed\'s source.', 'kntnt-newsletter-feed' ), $translatable_msg ),
+            'description' => __( 'Url for the feed\'s source.', 'kntnt-newsletter-feed' ),
             'default' => get_bloginfo( 'wpurl' ),
             'required' => true,
         ];
@@ -85,6 +85,7 @@ class Settings extends Abstract_Settings {
             'label' => __( "Max articles", 'kntnt-newsletter-feed' ),
             'size' => 20,
             'description' => __( 'The maximum number of items in th feed', 'kntnt-newsletter-feed' ),
+            'default' => 10,
             'required' => true,
         ];
 
@@ -93,6 +94,7 @@ class Settings extends Abstract_Settings {
             'label' => __( "Image as enclosure", 'kntnt-newsletter-feed' ),
             'description' => __( 'Select image size to enclose posts\' featured images.', 'kntnt-newsletter-feed' ),
             'options' => $this->image_sizes(),
+            'default' => 'medium_large',
         ];
 
         $fields['submit'] = [
@@ -100,19 +102,6 @@ class Settings extends Abstract_Settings {
         ];
 
         return $fields;
-
-    }
-
-    protected function actions_after_saving( $opt, $fields ) {
-
-        $name = $opt['name'];
-        $regex = "^$name/([^/]+)/(\d+)/?$";
-        $query = "index.php?$name=\$matches[1]&$name-max-age=\$matches[2]";
-        add_rewrite_rule( $regex, $query, 'top' );
-        flush_rewrite_rules();
-        Plugin::log( "Added rewrite rule: '%s' => '%s'", $regex, $query );
-
-        parent::actions_after_saving( $opt, $fields );
 
     }
 

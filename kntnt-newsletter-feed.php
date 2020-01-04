@@ -6,7 +6,7 @@
  * Plugin URI:        https://github.com/kntnt/kntnt-newsletter-feed
  * GitHub Plugin URI: https://github.com/kntnt/kntnt-newsletter-feed
  * Description:       Provides a RSS feed for automatic newsletter generation.
- * Version:           1.1.1
+ * Version:           1.2.0
  * Author:            Thomas Barregren
  * Author URI:        https://www.kntnt.com/
  * License:           GPL-3.0+
@@ -19,8 +19,8 @@ namespace Kntnt\Newsletter_Feed;
 
 defined( 'WPINC' ) || die;
 
-// Define WP_DEBUG as TRUE and uncomment next line to debug this plugin.
-// define( 'KNTNT_NEWSLETTER_FEED', true );
+// To debug this plugin, set both WP_DEBUG and following constant to true.
+define( 'KNTNT_NEWSLETTER_FEED_DEBUG', true );
 
 spl_autoload_register( function ( $class ) {
 	$ns_len = strlen( __NAMESPACE__ );

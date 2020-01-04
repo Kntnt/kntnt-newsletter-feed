@@ -4,81 +4,77 @@ namespace Kntnt\Newsletter_Feed;
 
 class Generator {
 
-    private $ns;
-
-    private $category;
-
-    private $max_age;
+    private $vars;
 
     private $charset;
 
     private $posts;
 
-    public function __construct() {
-        $this->ns = Plugin::ns();
-    }
+    public function __construct( $query_vars ) {
 
-    public function run() {
-        add_action( 'template_redirect', [ $this, 'template_redirect' ] );
-        Plugin::log( "Added the feed '%s'.", Plugin::option( 'name' ) );
-    }
-
-    public function template_redirect() {
-        $name = Plugin::option( 'name' );
-        if ( $this->category = get_query_var( $name ) ) {
-            $this->max_age = get_query_var( "$name-max-age" );
-            Plugin::log( "Generate feed '%s' with articles not older than %s days from category '%s'.", $name, $this->max_age, $this->category );
-            $this->feed();
-        }
-    }
-
-    public function feed() {
-        $this->init();
-        header( "Content-Type: application/rss+xml; charset=$this->charset", true );
-        Plugin::include_template( 'feed.php', $this->variables() );
-        exit;
-    }
-
-    private function init() {
+        // Setup.
+        $this->vars = $query_vars;
         $this->charset = get_option( 'blog_charset' );
-        $this->posts = get_posts( [
+        $this->posts = get_posts( $this->query() );
+
+        // Write feed.
+        $this->feed();
+
+    }
+
+    private function query() {
+        return [
             'post_type' => 'post',
             'post_status' => 'publish',
             'suppress_filters' => false,
             'offset' => 0,
             'posts_per_page' => Plugin::option( 'max_length' ),
             'orderby' => 'date',
-            'order' => 'DESC',
+            'order' => Plugin::option( 'order' ),
             'tax_query' => [
+                'relation' => 'AND',
                 [
-                    'taxonomy' => 'category',
-                    'field' => 'slug',
-                    'terms' => [ $this->category ],
+                    'terms' => [ $this->args['include'] ],
+                    'operator' => 'IN',
+                    'taxonomy' => $this->vars['taxonomy'],
                     'include_children' => Plugin::option( 'include_children' ),
+                    'field' => 'slug',
+                ],
+                [
+                    'terms' => [ $this->args['exclude'] ],
+                    'operator' => 'NOT IN',
+                    'taxonomy' => $this->vars['taxonomy'],
+                    'include_children' => Plugin::option( 'include_children' ),
+                    'field' => 'slug',
                 ],
             ],
             'date_query' => [
                 [
-                    'after' => "$this->max_age days ago",
+                    'after' => "{$this->vars['max_age']} days ago",
                 ],
             ],
-        ] );
+        ];
+    }
+
+    public function feed() {
+        header( "Content-Type: application/rss+xml; charset=$this->charset", true );
+        Plugin::include_template( 'feed.php', $this->variables() );
     }
 
     private function variables() {
         return [
             'charset' => $this->charset,
-            'feed_title' => Plugin::option( 'feed_title' ),
-            'feed_description' => Plugin::option( 'feed_description' ),
-            'feed_site' => Plugin::option( 'feed_site' ),
+            'feed_title' => Plugin::option( Plugin::slug_with_lang( 'feed_title' ) ),
+            'feed_description' => Plugin::option( Plugin::slug_with_lang( 'feed_description' ) ),
+            'feed_site' => Plugin::option( Plugin::slug_with_lang( 'feed_site' ) ),
             'feed_url' => $this->self_link(),
             'feed_build_date' => $this->build_date(),
             'feed_language' => $this->language(),
             'feed_update_period' => $this->update_period(),
             'feed_update_frequency' => $this->update_frequency(),
             'feed_image_url' => get_site_icon_url( 32 ),
-            'feed_image_title' => Plugin::option( 'feed_title' ),
-            'feed_image_link' => Plugin::option( 'feed_site' ),
+            'feed_image_title' => Plugin::option( Plugin::slug_with_lang'feed_title' )),
+            'feed_image_link' => Plugin::option( Plugin::slug_with_lang'feed_site' )),
             'feed_image_width' => 32,
             'feed_image_height' => 32,
             'posts' => $this->posts(),
