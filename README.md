@@ -25,11 +25,11 @@ To include all posts not having any of the `<term>`:s of the taxonomy
 
     /<name>/<taxonomy>;exclude=<term>,<term>,…,</term>
 
-To only include posts published `<number-of-days>` days ago or later:
+To only include posts published `<max-age>` days ago or later:
 
     /<name>/<taxonomy>;max-age=<number-of-days>
 
-To use a combination of `include=…`, `exclude=…` and `<number-of-days>=…`,
+To use a combination of `include=…`, `exclude=…` and `<max-age>=…`,
 separate them with semicolon:
 
     /<name>/<taxonomy>;include=<term>,<term>,…,</term>;max-age=<number-of-days>

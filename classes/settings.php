@@ -29,7 +29,7 @@ class Settings extends Abstract_Settings {
             'type' => 'text',
             'label' => __( "Slug", 'kntnt-newsletter-feed' ),
             'size' => 80,
-            'description' => __( 'The <a href="https://wordpress.org/support/article/wordpress-feeds/#finding-your-feed-url">name used in the URL</a> to access this type of feed.', 'kntnt-newsletter-feed' ),
+            'description' => __( 'The <a href="https://github.com/Kntnt/kntnt-newsletter-feed/blob/master/README.md">name used in the URL</a> to access this type of feed.', 'kntnt-newsletter-feed' ),
             'default' => 'newsletter',
             'required' => true,
         ];
