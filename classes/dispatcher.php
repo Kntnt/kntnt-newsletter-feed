@@ -5,6 +5,8 @@ namespace Kntnt\Newsletter_Feed;
 
 class Dispatcher {
 
+    private $args;
+
     public function run() {
         if ( $name = Plugin::option( 'name' ) ) {
             add_rewrite_endpoint( $name, EP_ROOT );
@@ -17,24 +19,44 @@ class Dispatcher {
     }
 
     public function add_default_values( $query_vars ) {
-        if ( isset( $query_vars['name'] ) && $query_vars['name'] == Plugin::option( 'name' ) ) {
-            $query_vars = $query_vars + [
-                    'taxonomy' => 'category',
-                    'include' => '',
-                    'exclude' => '',
-                    'max-age' => 0,
-                ];
-            Plugin::log( '$query_vars = %s', $query_vars );
+        $feed_name = Plugin::option( 'name' );
+        if ( isset( $query_vars[ $feed_name ] ) ) {
+            $this->args = array_merge( [
+                'taxonomy' => '',
+                'include' => [],
+                'exclude' => [],
+                'max-age' => PHP_INT_MAX,
+            ], $this->parse( $query_vars[ $feed_name ] ) );
+            Plugin::log( 'args = %s', $this->args );
         }
         return $query_vars;
     }
 
     public function dispatch() {
-        if ( ( $name = Plugin::option( 'name' ) ) && ( $query_vars = get_query_var( $name ) ) ) {
-            // Note: No need for sanitization, since WP_Query has that built-in.
-            new Generator( $query_vars );
+        if ( $this->args ) {
+            new Generator( $this->args );
             exit;
         }
+    }
+
+    private function parse( $vars ) {
+        $args = [];
+        $items = explode( ';', $vars );
+        foreach ( $items as $item ) {
+            list( $key, $value ) = explode( '=', $item );
+            if ( $value ) {
+                if ( 'max-age' == $key ) {
+                    $args[ $key ] = $value;
+                }
+                else {
+                    $args[ $key ] = explode( ',', $value );
+                }
+            }
+            else if ( $item ) {
+                $args['taxonomy'] = $item;
+            }
+        }
+        return $args;
     }
 
 }

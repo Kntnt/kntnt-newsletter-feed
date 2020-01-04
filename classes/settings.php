@@ -105,6 +105,10 @@ class Settings extends Abstract_Settings {
 
     }
 
+    protected function actions_after_saving( $opt, $fields ) {
+        flush_rewrite_rules();
+    }
+
     private function image_sizes() {
         foreach ( Plugin::image_sizes() as $name => $size ) {
             $image_sizes[ $name ] = "$name (${size['width']}x${size['height']})";

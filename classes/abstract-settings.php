@@ -176,9 +176,7 @@ abstract class Abstract_Settings {
         return true;
     }
 
-    protected function actions_after_saving( $opt, $fields ) {
-        do_action( "$this->ns/after_saving", $opt, $fields );
-    }
+    protected function actions_after_saving( $opt, $fields ) { }
 
     /**
      * Render settings page.
@@ -326,8 +324,9 @@ abstract class Abstract_Settings {
             // Success notification
             $this->notify_success();
 
-            // Do actions after saving.
+            // Actions after saving.
             $this->actions_after_saving( $opt, $fields );
+            do_action( "$this->ns/after_saving", $opt, $fields );
 
         }
 

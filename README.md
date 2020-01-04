@@ -6,38 +6,41 @@ WordPress plugin that provide a RSS feed for automatic newsletter generation.
 
 Below <name> is the name of the feed as configured in the settings.
 
-Returns all posts having at least one category. This is an alias for
-`/<name>?taxonomy=category`.
+To include all posts:
 
     /<name>
 
-Returns all posts having at least one term from the taxonomy with
-the slug `<taxonomy>`.
+To include all posts having at least one term from the taxonomy with the slug
+`<taxonomy>`:
 
-    /<name>?taxonomy=<taxonomy>
+    /<name>/<taxonomy>
 
-Returns all posts having at least one of the `<term>`:s of
-the taxonomy `<taxonomy>`.
+To include all posts having at least one of the `<term>`:s of the taxonomy
+`<taxonomy>`:
 
-    /<name>?taxonomy=<slug>&include=<slug>,<slug>,<slug>
+    /<name>/<taxonomy>;include=<term>,<term>,…,</term>
 
-Returns all posts not having at any of the `<term>`:s of
-the taxonomy `<taxonomy>`.
+To include all posts not having any of the `<term>`:s of the taxonomy
+`<taxonomy>`:
 
-    /<name>?taxonomy=<slug>&exclude=<slug>,<slug>,<slug>
+    /<name>/<taxonomy>;exclude=<term>,<term>,…,</term>
 
-Returns all posts not published earlier than `<number-of-days>` days.
+To only include posts published `<number-of-days>` days ago or later:
 
-    /<name>?taxonomy=<slug>&max-age=<number-of-days>
+    /<name>/<taxonomy>;max-age=<number-of-days>
 
-Any combination is allowed. If you for instance have named your feed
-`newsletter` and want all categorized posts published within the latest
-14 days, you can use
+To use a combination of `include=…`, `exclude=…` and `<number-of-days>=…`,
+separate them with semicolon:
 
-    /newsletter?exclude=uncategorized&max-age=14
+    /<name>/<taxonomy>;include=<term>,<term>,…,</term>;max-age=<number-of-days>
+    /<name>/<taxonomy>;exclude=<term>,<term>,…,</term>;max-age=<number-of-days>
+    /<name>/<taxonomy>;include=<term>,<term>,…,</term>;exclude=<term>,<term>,…,</term>
+    /<name>/<taxonomy>;include=<term>,<term>,…,</term>;exclude=<term>,<term>,…,</term>;max-age=<number-of-days>
 
-If WPML or Polylang is used, the langiage suffix might be used in front, as
-in this example: `/<lang>/<name>?cat=<slug>`.
+Example, If you for instance have named your feed `newsletter` and want all categorized
+posts published within the latest 14 days, you can use
+
+    /newsletter;exclude=uncategorized;max-age=14
 
 ## Installation
 

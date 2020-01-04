@@ -4,26 +4,24 @@ namespace Kntnt\Newsletter_Feed;
 
 class Generator {
 
-    private $vars;
-
     private $charset;
 
     private $posts;
 
-    public function __construct( $query_vars ) {
+    public function __construct( $args ) {
 
         // Setup.
-        $this->vars = $query_vars;
         $this->charset = get_option( 'blog_charset' );
-        $this->posts = get_posts( $this->query() );
+        $query = $this->query( $args );
+        $this->posts = get_posts( $query );
 
         // Write feed.
         $this->feed();
 
     }
 
-    private function query() {
-        return [
+    private function query( $args ) {
+        $query = [
             'post_type' => 'post',
             'post_status' => 'publish',
             'suppress_filters' => false,
@@ -31,29 +29,50 @@ class Generator {
             'posts_per_page' => Plugin::option( 'max_length' ),
             'orderby' => 'date',
             'order' => Plugin::option( 'order' ),
-            'tax_query' => [
-                'relation' => 'AND',
-                [
-                    'terms' => [ $this->args['include'] ],
-                    'operator' => 'IN',
-                    'taxonomy' => $this->vars['taxonomy'],
-                    'include_children' => Plugin::option( 'include_children' ),
-                    'field' => 'slug',
-                ],
-                [
-                    'terms' => [ $this->args['exclude'] ],
-                    'operator' => 'NOT IN',
-                    'taxonomy' => $this->vars['taxonomy'],
-                    'include_children' => Plugin::option( 'include_children' ),
-                    'field' => 'slug',
-                ],
-            ],
-            'date_query' => [
-                [
-                    'after' => "{$this->vars['max_age']} days ago",
-                ],
-            ],
         ];
+        $this->add_tax_query( $query, $args );
+        $this->add_date_query( $query, $args );
+        return $query;
+    }
+
+    private function add_tax_query( &$query, $args ) {
+        if ( $args['taxonomy'] ) {
+
+            if ( $args['include'] && $args['exclude'] ) {
+                $query['tax_query']['relation'] = 'AND';
+            }
+
+            if ( $args['include'] ) {
+                $query['tax_query'][] = [
+                    'terms' => $args['include'],
+                    'operator' => 'IN',
+                    'taxonomy' => $args['taxonomy'],
+                    'include_children' => Plugin::option( 'include_children' ),
+                    'field' => 'slug',
+                ];
+            }
+
+            if ( $args['exclude'] || ! $args['include'] ) {
+                $query['tax_query'][] = [
+                    'terms' => $args['exclude'],
+                    'operator' => 'NOT IN',
+                    'taxonomy' => $args['taxonomy'],
+                    'include_children' => Plugin::option( 'include_children' ),
+                    'field' => 'slug',
+                ];
+            }
+
+        }
+    }
+
+    private function add_date_query( &$query, $args ) {
+        if ( $args['max-age'] < PHP_INT_MAX ) {
+            $query['date_query'] = [
+                [
+                    'after' => "{$args['max-age']} days ago",
+                ],
+            ];
+        }
     }
 
     public function feed() {
@@ -87,15 +106,12 @@ class Generator {
     }
 
     private function build_date() {
-
         if ( ! $this->posts ) {
             return get_lastpostmodified( 'GMT' );
         }
-
         $modified_times = wp_list_pluck( $this->posts, 'post_modified_gmt' );
         $max_modified_time = mysql2date( 'r', max( $modified_times ), false );
         return apply_filters( 'get_feed_build_date', $max_modified_time, 'r' );
-
     }
 
     private function language() {
@@ -111,19 +127,14 @@ class Generator {
     }
 
     private function posts() {
-
         $posts = [];
-
         foreach ( $this->posts as $item ) {
             $posts[] = new Post( $item, $this->charset );
         }
-
         if ( 'ASC' == Plugin::option( 'order' ) ) {
             $posts = array_reverse( $posts );
         }
-
         return $posts;
-
     }
 
 }
