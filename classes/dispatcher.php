@@ -23,7 +23,7 @@ class Dispatcher {
                     'include' => '',
                     'exclude' => '',
                     'max-age' => 0,
-                ] );
+                ];
             Plugin::log( '$query_vars = %s', $query_vars );
         }
         return $query_vars;
