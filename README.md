@@ -80,6 +80,10 @@ If you are familiar with Git, please do a pull request.
 
 ## Changelog
 
+### 1.2.1
+
+Fixed bug preventing registration of rewrite rule.
+
 ### 1.2.0
 
 Improved the abstract plugin and settings classes and rewrote how the feed is generated.
