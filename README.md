@@ -27,7 +27,7 @@ To include all posts not having any of the `<term>`:s of the taxonomy
 
 To only include posts published `<max-age>` days ago or later:
 
-    /<name>/<taxonomy>;max-age=<number-of-days>
+    /<name>/max-age=<number-of-days>
 
 To use a combination of `include=…`, `exclude=…` and `<max-age>=…`,
 separate them with semicolon:
@@ -37,8 +37,10 @@ separate them with semicolon:
     /<name>/<taxonomy>;include=<term>,<term>,…,</term>;exclude=<term>,<term>,…,</term>
     /<name>/<taxonomy>;include=<term>,<term>,…,</term>;exclude=<term>,<term>,…,</term>;max-age=<number-of-days>
 
+Notice that `taxanony` is reqiured if `include=…` and/or `exclude=…` is used, and that the included and/or excluded terms must be in that taxonomy.
+
 Example, If you for instance have named your feed `newsletter` and want all categorized
-posts published within the latest 14 days, you can use
+posts published within the last 14 days, you can use
 
     /newsletter;exclude=uncategorized;max-age=14
 
@@ -47,8 +49,6 @@ posts published within the latest 14 days, you can use
 Install the plugin [the usually way](https://codex.wordpress.org/Managing_Plugins#Installing_Plugins).
 
 You can also install it with [*GitHub Updater*](https://github.com/afragen/github-updater/archive/develop.zip), which gives you the additional benefit of keeping the plugin up to date from within its administrative interface (i.e. the usually way). Please visit its [wiki](https://github.com/afragen/github-updater/wiki) for more information.
-
-You need an API key for this plugin to work. To get an API key free of charge, send a request to info@kntnt.com.
 
 ## Frequently Asked Questions
 
@@ -74,7 +74,7 @@ If you have found a potential bug, please report it on the plugin's [issue track
 
 Contributions to the code or documentation are much appreciated.
 
-If you are unfamiliar with Git, please date it as a new issue on the plugin's [issue tracker](https://github.com/kntnt/kntnt-newsletter-feed/issues) at Github.
+If you are unfamiliar with Git, please post it as a new issue on the plugin's [issue tracker](https://github.com/kntnt/kntnt-newsletter-feed/issues) at Github.
 
 If you are familiar with Git, please do a pull request.
 
