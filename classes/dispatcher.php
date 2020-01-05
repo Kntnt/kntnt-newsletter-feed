@@ -9,12 +9,8 @@ class Dispatcher {
 
     public function run() {
         if ( $name = Plugin::option( 'name' ) ) {
-            add_rewrite_endpoint( $name, EP_ROOT );
             add_filter( 'request', [ $this, 'add_default_values' ] );
             add_action( 'template_redirect', [ $this, 'dispatch' ] );
-        }
-        else {
-            Plugin::log( 'Plugin options not set.' );
         }
     }
 
