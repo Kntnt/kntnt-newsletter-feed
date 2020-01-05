@@ -10,6 +10,10 @@ To include all posts:
 
     /<name>
 
+To include posts published not later than `<max-age>` days ago:
+
+    /<name>/max-age=<number-of-days>
+
 To include all posts having at least one term from the taxonomy with the slug
 `<taxonomy>`:
 
@@ -24,10 +28,6 @@ To include all posts not having any of the `<term>`:s of the taxonomy
 `<taxonomy>`:
 
     /<name>/<taxonomy>;exclude=<term>,<term>,…,</term>
-
-To only include posts published `<max-age>` days ago or later:
-
-    /<name>/max-age=<number-of-days>
 
 To use a combination of `include=…`, `exclude=…` and `<max-age>=…`,
 separate them with semicolon:
